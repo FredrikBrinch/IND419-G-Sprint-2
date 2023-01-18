@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Priority Sorter</title>
+    <style>
+      /* CSS styles for the form and table elements */
+      form {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      label, input {
+        margin: 10px;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      th, td {
+        border: 1px solid #dddddd;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #dddddd;
+      }
+    </style>
+  </head>
+  <body>
+    <form>
+      <label for="activity">Activity:</label>
+      <input type="text" id="activity" placeholder="Enter activity">
+      <label for="priority">Priority:</label>
+      <select id="priority">
+        <option value="1">Low</option>
+        <option value="2">Medium</option>
+        <option value="3">High</option>
+      </select>
+      <label for="dueDate">Due Date:</label>
+      <input type="date" id="dueDate">
+      <label for="dependency">Dependency:</label>
+      <input type="text" id="dependency" placeholder="Enter dependent task">
+      <button onclick="addActivity()">Add</button>
+    </form>
+    <table id="activities">
+      <thead>
+        <tr>
+          <th>Activity</th>
+          <th>Priority</th>
+          <th>Due Date</th>
+          <th>Dependency</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+    <script>
+          var activities = []; // array to store the activities
+    // function to add an activity to the array and sort it
+    function addActivity() {
+      var activity = document.getElementById("activity").value;
+      var priority = document.getElementById("priority").value;
+      var dueDate = document.getElementById("dueDate").value;
+      var dependency = document.getElementById("dependency").value;
+      activities.push({activity: activity, priority: priority, dueDate: dueDate, dependency: dependency});
+      sortActivities();
+    }
+    // function to sort the activities based on priority, due date and dependency
+    function sortActivities() {
+      activities.sort(function(a, b) {
+        if (a.priority !== b.priority) {
+          return a.priority - b.priority;
+        } else if (a.dueDate !== b.dueDate) {
+          return new Date(a.dueDate) - new Date(b.dueDate);
+        } else {
+          return a.dependency.localeCompare(b.dependency);
+        }
+      });
+      updateTable();
+    }
+    // function to update the table with the sorted activities
+    function updateTable() {
+      var table = document.getElementById("activities").getElementsByTagName('tbody')[0];
+      // table.innerHTML = ""; // clear the table
+      for (var i = 0; i < activities.length; i++) {
+        var row = table.insertRow();
+        var activityCell = row.insertCell();
+        var priorityCell = row.insertCell();
+        var dueDateCell = row.insertCell();
+        var dependencyCell = row.insertCell();
+        activityCell.innerHTML = activities[i].activity;
+        priorityCell.innerHTML = activities[i].priority;
+        dueDateCell.innerHTML = activities[i].dueDate;
+        dependencyCell.innerHTML = activities[i].dependency;
+      }
+    }
+  </script>
+</body>
+</html>
