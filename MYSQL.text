@@ -1,0 +1,30 @@
+<?php
+    $servername = "your_server_name";
+    $username = "your_username";
+    $password = "your_password";
+    $dbname = "your_database_name";
+
+    // Create connection
+    $conn = new mysqli($servername, $username, $password, $dbname);
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    // receive data from javascript
+    $data = json_decode(file_get_contents('php://input'), true);
+    // loop through the array and insert into database
+    foreach ($data as $task) {
+        $activity = $task['activity'];
+        $priority = $task['priority'];
+        $due_date = $task['dueDate'];
+        $dependency = $task['dependency'];
+        $sql = "INSERT INTO tasks (activity, priority, due_date, dependency) VALUES ('$activity', '$priority', '$due_date', '$dependency')";
+        if ($conn->query($sql) === TRUE) {
+            echo "New task created successfully";
+        } else {
+            echo "Error: " . $sql . "<br>" . $conn->error;
+        }
+    }
+    $conn->close();
+?>
